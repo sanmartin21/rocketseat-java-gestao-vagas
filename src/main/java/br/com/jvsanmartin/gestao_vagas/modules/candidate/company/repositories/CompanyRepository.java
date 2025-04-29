@@ -1,6 +1,5 @@
 package br.com.jvsanmartin.gestao_vagas.modules.candidate.company.repositories;
 
-import br.com.jvsanmartin.gestao_vagas.modules.candidate.CandidateEntity;
 import br.com.jvsanmartin.gestao_vagas.modules.candidate.company.entities.CompanyEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 

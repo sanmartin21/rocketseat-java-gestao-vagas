@@ -32,24 +32,30 @@ public class AuthCandidateUseCase {
                 .orElseThrow(() -> {
                     throw new UsernameNotFoundException("Username/password incorrect");
                 });
-        var passwordMatches = this.passwordEncoder.matches(authCandidateRequestDTO.password(), candidate.getPassword());
+        var passwordMatches = this.passwordEncoder
+                .matches(authCandidateRequestDTO.password(), candidate.getPassword());
 
         if(!passwordMatches){
+            System.out.println("teste");
             throw new ArithmeticException();
         }
 
-        Algorithm algorithm = Algorithm.HMAC256("secretKey");
+        var roles = Arrays.asList("CANDIDATE");
+
+        Algorithm algorithm = Algorithm.HMAC256(secretKey);
         var expiresIn = Instant.now().plus(Duration.ofMinutes(10));
 
-        var token = JWT.create().withIssuer("javagas")
-                .withClaim("roles", Arrays.asList("candidate"))
-                . withSubject(candidate.getId().toString())
+        var token = JWT.create()
+                .withIssuer("javagas")
+                .withSubject(candidate.getId().toString())
+                .withClaim("roles", roles)
                 .withExpiresAt(expiresIn)
                 .sign(algorithm);
 
         var authCandidateResponse = AuthCandidateResponseDTO.builder()
-                .acess_token(token)
+                .access_token(token)
                 .expires_in(expiresIn.toEpochMilli())
+                .roles(roles)
                 .build();
         return authCandidateResponse;
     }
